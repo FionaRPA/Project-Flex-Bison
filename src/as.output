@@ -1,0 +1,1567 @@
+État 0 conflits: 3 réduction/réduction
+État 6 conflits: 1 décalage/réduction
+
+
+Grammaire
+
+    0 $accept: Prog $end
+
+    1 Prog: Decls DeclFoncts
+
+    2 CorpsStruct: '{' DeclVars '}' ';'
+
+    3 Decls: DeclStructs
+    4      | DeclVars
+    5      | %empty
+
+    6 DeclStructs: DeclStructs DeclStruct
+    7            | DeclStruct
+
+    8 DeclStruct: STRUCT IDENT CorpsStruct
+    9           | STRUCT Declarateurs ';'
+
+   10 DeclVars: DeclVars TYPE Declarateurs ';'
+   11         | %empty
+
+   12 Declarateurs: Declarateurs ',' IDENT
+   13             | IDENT
+
+   14 DeclFoncts: DeclFoncts DeclFonct
+   15           | DeclFonct
+   16           | error
+
+   17 DeclFonct: EnTeteFonct Corps
+
+   18 EnTeteFonct: TYPE IDENT '(' Parametres ')'
+   19            | VOID IDENT '(' Parametres ')'
+   20            | error
+
+   21 Parametres: VOID
+   22           | ListTypVar
+
+   23 ListTypVar: ListTypVar ',' TYPE IDENT
+   24           | TYPE IDENT
+   25           | error
+
+   26 Corps: '{' DeclVars SuiteInstr '}'
+
+   27 SuiteInstr: SuiteInstr Instr
+   28           | %empty
+
+   29 Instr: LValue '=' Exp ';'
+   30      | READE '(' IDENT ')' ';'
+   31      | READC '(' IDENT ')' ';'
+   32      | PRINT '(' Exp ')' ';'
+   33      | IF '(' Exp ')' Instr
+   34      | IF '(' Exp ')' Instr ELSE Instr
+   35      | WHILE '(' Exp ')' Instr
+   36      | IDENT '(' Arguments ')' ';'
+   37      | RETURN Exp ';'
+   38      | RETURN ';'
+   39      | '{' SuiteInstr '}'
+   40      | ';'
+   41      | error
+
+   42 Exp: Exp OR TB
+   43    | TB
+   44    | error
+
+   45 TB: TB AND FB
+   46   | FB
+
+   47 FB: FB EQ M
+   48   | M
+
+   49 M: M ORDER E
+   50  | E
+
+   51 E: E ADDSUB T
+   52  | T
+
+   53 T: T DIVSTAR F
+   54  | F
+
+   55 F: ADDSUB F
+   56  | '!' F
+   57  | '(' Exp ')'
+   58  | NUM
+   59  | CHARACTER
+   60  | LValue
+   61  | IDENT '(' Arguments ')'
+
+   62 LValue: IDENT
+
+   63 Arguments: ListExp
+   64          | %empty
+
+   65 ListExp: ListExp ',' Exp
+   66        | Exp
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+$end (0) 0
+'!' (33) 56
+'(' (40) 18 19 30 31 32 33 34 35 36 57 61
+')' (41) 18 19 30 31 32 33 34 35 36 57 61
+',' (44) 12 23 65
+';' (59) 2 9 10 29 30 31 32 36 37 38 40
+'=' (61) 29
+'{' (123) 2 26 39
+'}' (125) 2 26 39
+error (256) 16 20 25 41 44
+STRUCT (258) 8 9
+CHARACTER (259) 59
+NUM (260) 58
+IDENT (261) 8 12 13 18 19 23 24 30 31 36 61 62
+TYPE (262) 10 18 23 24
+EQ (263) 47
+ORDER (264) 49
+ADDSUB (265) 51 55
+DIVSTAR (266) 53
+OR (267) 42
+AND (268) 45
+READC (269) 31
+READE (270) 30
+PRINT (271) 32
+WHILE (272) 35
+IF (273) 33 34
+"then" (274)
+ELSE (275) 34
+RETURN (276) 37 38
+VOID (277) 19 21
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+$accept (31)
+    à gauche: 0
+Prog (32)
+    à gauche: 1, à droite: 0
+CorpsStruct (33)
+    à gauche: 2, à droite: 8
+Decls (34)
+    à gauche: 3 4 5, à droite: 1
+DeclStructs (35)
+    à gauche: 6 7, à droite: 3 6
+DeclStruct (36)
+    à gauche: 8 9, à droite: 6 7
+DeclVars (37)
+    à gauche: 10 11, à droite: 2 4 10 26
+Declarateurs (38)
+    à gauche: 12 13, à droite: 9 10 12
+DeclFoncts (39)
+    à gauche: 14 15 16, à droite: 1 14
+DeclFonct (40)
+    à gauche: 17, à droite: 14 15
+EnTeteFonct (41)
+    à gauche: 18 19 20, à droite: 17
+Parametres (42)
+    à gauche: 21 22, à droite: 18 19
+ListTypVar (43)
+    à gauche: 23 24 25, à droite: 22 23
+Corps (44)
+    à gauche: 26, à droite: 17
+SuiteInstr (45)
+    à gauche: 27 28, à droite: 26 27 39
+Instr (46)
+    à gauche: 29 30 31 32 33 34 35 36 37 38 39 40 41, à droite: 27
+    33 34 35
+Exp (47)
+    à gauche: 42 43 44, à droite: 29 32 33 34 35 37 42 57 65 66
+TB (48)
+    à gauche: 45 46, à droite: 42 43 45
+FB (49)
+    à gauche: 47 48, à droite: 45 46 47
+M (50)
+    à gauche: 49 50, à droite: 47 48 49
+E (51)
+    à gauche: 51 52, à droite: 49 50 51
+T (52)
+    à gauche: 53 54, à droite: 51 52 53
+F (53)
+    à gauche: 55 56 57 58 59 60 61, à droite: 53 54 55 56
+LValue (54)
+    à gauche: 62, à droite: 29 60
+Arguments (55)
+    à gauche: 63 64, à droite: 36 61
+ListExp (56)
+    à gauche: 65 66, à droite: 63 65
+
+
+État 0
+
+    0 $accept: . Prog $end
+
+    STRUCT  décalage et aller à l'état 1
+
+    error     réduction par utilisation de la règle 5 (Decls)
+    error     [réduction par utilisation de la règle 11 (DeclVars)]
+    TYPE      réduction par utilisation de la règle 5 (Decls)
+    TYPE      [réduction par utilisation de la règle 11 (DeclVars)]
+    VOID      réduction par utilisation de la règle 5 (Decls)
+    VOID      [réduction par utilisation de la règle 11 (DeclVars)]
+    $défaut  réduction par utilisation de la règle 5 (Decls)
+
+    Prog         aller à l'état 2
+    Decls        aller à l'état 3
+    DeclStructs  aller à l'état 4
+    DeclStruct   aller à l'état 5
+    DeclVars     aller à l'état 6
+
+
+État 1
+
+    8 DeclStruct: STRUCT . IDENT CorpsStruct
+    9           | STRUCT . Declarateurs ';'
+
+    IDENT  décalage et aller à l'état 7
+
+    Declarateurs  aller à l'état 8
+
+
+État 2
+
+    0 $accept: Prog . $end
+
+    $end  décalage et aller à l'état 9
+
+
+État 3
+
+    1 Prog: Decls . DeclFoncts
+
+    error  décalage et aller à l'état 10
+    TYPE   décalage et aller à l'état 11
+    VOID   décalage et aller à l'état 12
+
+    DeclFoncts   aller à l'état 13
+    DeclFonct    aller à l'état 14
+    EnTeteFonct  aller à l'état 15
+
+
+État 4
+
+    3 Decls: DeclStructs .
+    6 DeclStructs: DeclStructs . DeclStruct
+
+    STRUCT  décalage et aller à l'état 1
+
+    $défaut  réduction par utilisation de la règle 3 (Decls)
+
+    DeclStruct  aller à l'état 16
+
+
+État 5
+
+    7 DeclStructs: DeclStruct .
+
+    $défaut  réduction par utilisation de la règle 7 (DeclStructs)
+
+
+État 6
+
+    4 Decls: DeclVars .
+   10 DeclVars: DeclVars . TYPE Declarateurs ';'
+
+    TYPE  décalage et aller à l'état 17
+
+    TYPE      [réduction par utilisation de la règle 4 (Decls)]
+    $défaut  réduction par utilisation de la règle 4 (Decls)
+
+
+État 7
+
+    8 DeclStruct: STRUCT IDENT . CorpsStruct
+   13 Declarateurs: IDENT .
+
+    '{'  décalage et aller à l'état 18
+
+    $défaut  réduction par utilisation de la règle 13 (Declarateurs)
+
+    CorpsStruct  aller à l'état 19
+
+
+État 8
+
+    9 DeclStruct: STRUCT Declarateurs . ';'
+   12 Declarateurs: Declarateurs . ',' IDENT
+
+    ';'  décalage et aller à l'état 20
+    ','  décalage et aller à l'état 21
+
+
+État 9
+
+    0 $accept: Prog $end .
+
+    $défaut  accepter
+
+
+État 10
+
+   16 DeclFoncts: error .
+   20 EnTeteFonct: error .
+
+    '{'       réduction par utilisation de la règle 20 (EnTeteFonct)
+    $défaut  réduction par utilisation de la règle 16 (DeclFoncts)
+
+
+État 11
+
+   18 EnTeteFonct: TYPE . IDENT '(' Parametres ')'
+
+    IDENT  décalage et aller à l'état 22
+
+
+État 12
+
+   19 EnTeteFonct: VOID . IDENT '(' Parametres ')'
+
+    IDENT  décalage et aller à l'état 23
+
+
+État 13
+
+    1 Prog: Decls DeclFoncts .
+   14 DeclFoncts: DeclFoncts . DeclFonct
+
+    error  décalage et aller à l'état 24
+    TYPE   décalage et aller à l'état 11
+    VOID   décalage et aller à l'état 12
+
+    $end  réduction par utilisation de la règle 1 (Prog)
+
+    DeclFonct    aller à l'état 25
+    EnTeteFonct  aller à l'état 15
+
+
+État 14
+
+   15 DeclFoncts: DeclFonct .
+
+    $défaut  réduction par utilisation de la règle 15 (DeclFoncts)
+
+
+État 15
+
+   17 DeclFonct: EnTeteFonct . Corps
+
+    '{'  décalage et aller à l'état 26
+
+    Corps  aller à l'état 27
+
+
+État 16
+
+    6 DeclStructs: DeclStructs DeclStruct .
+
+    $défaut  réduction par utilisation de la règle 6 (DeclStructs)
+
+
+État 17
+
+   10 DeclVars: DeclVars TYPE . Declarateurs ';'
+
+    IDENT  décalage et aller à l'état 28
+
+    Declarateurs  aller à l'état 29
+
+
+État 18
+
+    2 CorpsStruct: '{' . DeclVars '}' ';'
+
+    $défaut  réduction par utilisation de la règle 11 (DeclVars)
+
+    DeclVars  aller à l'état 30
+
+
+État 19
+
+    8 DeclStruct: STRUCT IDENT CorpsStruct .
+
+    $défaut  réduction par utilisation de la règle 8 (DeclStruct)
+
+
+État 20
+
+    9 DeclStruct: STRUCT Declarateurs ';' .
+
+    $défaut  réduction par utilisation de la règle 9 (DeclStruct)
+
+
+État 21
+
+   12 Declarateurs: Declarateurs ',' . IDENT
+
+    IDENT  décalage et aller à l'état 31
+
+
+État 22
+
+   18 EnTeteFonct: TYPE IDENT . '(' Parametres ')'
+
+    '('  décalage et aller à l'état 32
+
+
+État 23
+
+   19 EnTeteFonct: VOID IDENT . '(' Parametres ')'
+
+    '('  décalage et aller à l'état 33
+
+
+État 24
+
+   20 EnTeteFonct: error .
+
+    $défaut  réduction par utilisation de la règle 20 (EnTeteFonct)
+
+
+État 25
+
+   14 DeclFoncts: DeclFoncts DeclFonct .
+
+    $défaut  réduction par utilisation de la règle 14 (DeclFoncts)
+
+
+État 26
+
+   26 Corps: '{' . DeclVars SuiteInstr '}'
+
+    $défaut  réduction par utilisation de la règle 11 (DeclVars)
+
+    DeclVars  aller à l'état 34
+
+
+État 27
+
+   17 DeclFonct: EnTeteFonct Corps .
+
+    $défaut  réduction par utilisation de la règle 17 (DeclFonct)
+
+
+État 28
+
+   13 Declarateurs: IDENT .
+
+    $défaut  réduction par utilisation de la règle 13 (Declarateurs)
+
+
+État 29
+
+   10 DeclVars: DeclVars TYPE Declarateurs . ';'
+   12 Declarateurs: Declarateurs . ',' IDENT
+
+    ';'  décalage et aller à l'état 35
+    ','  décalage et aller à l'état 21
+
+
+État 30
+
+    2 CorpsStruct: '{' DeclVars . '}' ';'
+   10 DeclVars: DeclVars . TYPE Declarateurs ';'
+
+    TYPE  décalage et aller à l'état 17
+    '}'   décalage et aller à l'état 36
+
+
+État 31
+
+   12 Declarateurs: Declarateurs ',' IDENT .
+
+    $défaut  réduction par utilisation de la règle 12 (Declarateurs)
+
+
+État 32
+
+   18 EnTeteFonct: TYPE IDENT '(' . Parametres ')'
+
+    error  décalage et aller à l'état 37
+    TYPE   décalage et aller à l'état 38
+    VOID   décalage et aller à l'état 39
+
+    Parametres  aller à l'état 40
+    ListTypVar  aller à l'état 41
+
+
+État 33
+
+   19 EnTeteFonct: VOID IDENT '(' . Parametres ')'
+
+    error  décalage et aller à l'état 37
+    TYPE   décalage et aller à l'état 38
+    VOID   décalage et aller à l'état 39
+
+    Parametres  aller à l'état 42
+    ListTypVar  aller à l'état 41
+
+
+État 34
+
+   10 DeclVars: DeclVars . TYPE Declarateurs ';'
+   26 Corps: '{' DeclVars . SuiteInstr '}'
+
+    TYPE  décalage et aller à l'état 17
+
+    $défaut  réduction par utilisation de la règle 28 (SuiteInstr)
+
+    SuiteInstr  aller à l'état 43
+
+
+État 35
+
+   10 DeclVars: DeclVars TYPE Declarateurs ';' .
+
+    $défaut  réduction par utilisation de la règle 10 (DeclVars)
+
+
+État 36
+
+    2 CorpsStruct: '{' DeclVars '}' . ';'
+
+    ';'  décalage et aller à l'état 44
+
+
+État 37
+
+   25 ListTypVar: error .
+
+    $défaut  réduction par utilisation de la règle 25 (ListTypVar)
+
+
+État 38
+
+   24 ListTypVar: TYPE . IDENT
+
+    IDENT  décalage et aller à l'état 45
+
+
+État 39
+
+   21 Parametres: VOID .
+
+    $défaut  réduction par utilisation de la règle 21 (Parametres)
+
+
+État 40
+
+   18 EnTeteFonct: TYPE IDENT '(' Parametres . ')'
+
+    ')'  décalage et aller à l'état 46
+
+
+État 41
+
+   22 Parametres: ListTypVar .
+   23 ListTypVar: ListTypVar . ',' TYPE IDENT
+
+    ','  décalage et aller à l'état 47
+
+    $défaut  réduction par utilisation de la règle 22 (Parametres)
+
+
+État 42
+
+   19 EnTeteFonct: VOID IDENT '(' Parametres . ')'
+
+    ')'  décalage et aller à l'état 48
+
+
+État 43
+
+   26 Corps: '{' DeclVars SuiteInstr . '}'
+   27 SuiteInstr: SuiteInstr . Instr
+
+    error   décalage et aller à l'état 49
+    IDENT   décalage et aller à l'état 50
+    READC   décalage et aller à l'état 51
+    READE   décalage et aller à l'état 52
+    PRINT   décalage et aller à l'état 53
+    WHILE   décalage et aller à l'état 54
+    IF      décalage et aller à l'état 55
+    RETURN  décalage et aller à l'état 56
+    '{'     décalage et aller à l'état 57
+    '}'     décalage et aller à l'état 58
+    ';'     décalage et aller à l'état 59
+
+    Instr   aller à l'état 60
+    LValue  aller à l'état 61
+
+
+État 44
+
+    2 CorpsStruct: '{' DeclVars '}' ';' .
+
+    $défaut  réduction par utilisation de la règle 2 (CorpsStruct)
+
+
+État 45
+
+   24 ListTypVar: TYPE IDENT .
+
+    $défaut  réduction par utilisation de la règle 24 (ListTypVar)
+
+
+État 46
+
+   18 EnTeteFonct: TYPE IDENT '(' Parametres ')' .
+
+    $défaut  réduction par utilisation de la règle 18 (EnTeteFonct)
+
+
+État 47
+
+   23 ListTypVar: ListTypVar ',' . TYPE IDENT
+
+    TYPE  décalage et aller à l'état 62
+
+
+État 48
+
+   19 EnTeteFonct: VOID IDENT '(' Parametres ')' .
+
+    $défaut  réduction par utilisation de la règle 19 (EnTeteFonct)
+
+
+État 49
+
+   41 Instr: error .
+
+    $défaut  réduction par utilisation de la règle 41 (Instr)
+
+
+État 50
+
+   36 Instr: IDENT . '(' Arguments ')' ';'
+   62 LValue: IDENT .
+
+    '('  décalage et aller à l'état 63
+
+    $défaut  réduction par utilisation de la règle 62 (LValue)
+
+
+État 51
+
+   31 Instr: READC . '(' IDENT ')' ';'
+
+    '('  décalage et aller à l'état 64
+
+
+État 52
+
+   30 Instr: READE . '(' IDENT ')' ';'
+
+    '('  décalage et aller à l'état 65
+
+
+État 53
+
+   32 Instr: PRINT . '(' Exp ')' ';'
+
+    '('  décalage et aller à l'état 66
+
+
+État 54
+
+   35 Instr: WHILE . '(' Exp ')' Instr
+
+    '('  décalage et aller à l'état 67
+
+
+État 55
+
+   33 Instr: IF . '(' Exp ')' Instr
+   34      | IF . '(' Exp ')' Instr ELSE Instr
+
+    '('  décalage et aller à l'état 68
+
+
+État 56
+
+   37 Instr: RETURN . Exp ';'
+   38      | RETURN . ';'
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    ';'        décalage et aller à l'état 74
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    Exp     aller à l'état 77
+    TB      aller à l'état 78
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 57
+
+   39 Instr: '{' . SuiteInstr '}'
+
+    $défaut  réduction par utilisation de la règle 28 (SuiteInstr)
+
+    SuiteInstr  aller à l'état 85
+
+
+État 58
+
+   26 Corps: '{' DeclVars SuiteInstr '}' .
+
+    $défaut  réduction par utilisation de la règle 26 (Corps)
+
+
+État 59
+
+   40 Instr: ';' .
+
+    $défaut  réduction par utilisation de la règle 40 (Instr)
+
+
+État 60
+
+   27 SuiteInstr: SuiteInstr Instr .
+
+    $défaut  réduction par utilisation de la règle 27 (SuiteInstr)
+
+
+État 61
+
+   29 Instr: LValue . '=' Exp ';'
+
+    '='  décalage et aller à l'état 86
+
+
+État 62
+
+   23 ListTypVar: ListTypVar ',' TYPE . IDENT
+
+    IDENT  décalage et aller à l'état 87
+
+
+État 63
+
+   36 Instr: IDENT '(' . Arguments ')' ';'
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    ')'  réduction par utilisation de la règle 64 (Arguments)
+
+    Exp        aller à l'état 88
+    TB         aller à l'état 78
+    FB         aller à l'état 79
+    M          aller à l'état 80
+    E          aller à l'état 81
+    T          aller à l'état 82
+    F          aller à l'état 83
+    LValue     aller à l'état 84
+    Arguments  aller à l'état 89
+    ListExp    aller à l'état 90
+
+
+État 64
+
+   31 Instr: READC '(' . IDENT ')' ';'
+
+    IDENT  décalage et aller à l'état 91
+
+
+État 65
+
+   30 Instr: READE '(' . IDENT ')' ';'
+
+    IDENT  décalage et aller à l'état 92
+
+
+État 66
+
+   32 Instr: PRINT '(' . Exp ')' ';'
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    Exp     aller à l'état 93
+    TB      aller à l'état 78
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 67
+
+   35 Instr: WHILE '(' . Exp ')' Instr
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    Exp     aller à l'état 94
+    TB      aller à l'état 78
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 68
+
+   33 Instr: IF '(' . Exp ')' Instr
+   34      | IF '(' . Exp ')' Instr ELSE Instr
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    Exp     aller à l'état 95
+    TB      aller à l'état 78
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 69
+
+   44 Exp: error .
+
+    $défaut  réduction par utilisation de la règle 44 (Exp)
+
+
+État 70
+
+   59 F: CHARACTER .
+
+    $défaut  réduction par utilisation de la règle 59 (F)
+
+
+État 71
+
+   58 F: NUM .
+
+    $défaut  réduction par utilisation de la règle 58 (F)
+
+
+État 72
+
+   61 F: IDENT . '(' Arguments ')'
+   62 LValue: IDENT .
+
+    '('  décalage et aller à l'état 96
+
+    $défaut  réduction par utilisation de la règle 62 (LValue)
+
+
+État 73
+
+   55 F: ADDSUB . F
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    F       aller à l'état 97
+    LValue  aller à l'état 84
+
+
+État 74
+
+   38 Instr: RETURN ';' .
+
+    $défaut  réduction par utilisation de la règle 38 (Instr)
+
+
+État 75
+
+   57 F: '(' . Exp ')'
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    Exp     aller à l'état 98
+    TB      aller à l'état 78
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 76
+
+   56 F: '!' . F
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    F       aller à l'état 99
+    LValue  aller à l'état 84
+
+
+État 77
+
+   37 Instr: RETURN Exp . ';'
+   42 Exp: Exp . OR TB
+
+    OR   décalage et aller à l'état 100
+    ';'  décalage et aller à l'état 101
+
+
+État 78
+
+   43 Exp: TB .
+   45 TB: TB . AND FB
+
+    AND  décalage et aller à l'état 102
+
+    $défaut  réduction par utilisation de la règle 43 (Exp)
+
+
+État 79
+
+   46 TB: FB .
+   47 FB: FB . EQ M
+
+    EQ  décalage et aller à l'état 103
+
+    $défaut  réduction par utilisation de la règle 46 (TB)
+
+
+État 80
+
+   48 FB: M .
+   49 M: M . ORDER E
+
+    ORDER  décalage et aller à l'état 104
+
+    $défaut  réduction par utilisation de la règle 48 (FB)
+
+
+État 81
+
+   50 M: E .
+   51 E: E . ADDSUB T
+
+    ADDSUB  décalage et aller à l'état 105
+
+    $défaut  réduction par utilisation de la règle 50 (M)
+
+
+État 82
+
+   52 E: T .
+   53 T: T . DIVSTAR F
+
+    DIVSTAR  décalage et aller à l'état 106
+
+    $défaut  réduction par utilisation de la règle 52 (E)
+
+
+État 83
+
+   54 T: F .
+
+    $défaut  réduction par utilisation de la règle 54 (T)
+
+
+État 84
+
+   60 F: LValue .
+
+    $défaut  réduction par utilisation de la règle 60 (F)
+
+
+État 85
+
+   27 SuiteInstr: SuiteInstr . Instr
+   39 Instr: '{' SuiteInstr . '}'
+
+    error   décalage et aller à l'état 49
+    IDENT   décalage et aller à l'état 50
+    READC   décalage et aller à l'état 51
+    READE   décalage et aller à l'état 52
+    PRINT   décalage et aller à l'état 53
+    WHILE   décalage et aller à l'état 54
+    IF      décalage et aller à l'état 55
+    RETURN  décalage et aller à l'état 56
+    '{'     décalage et aller à l'état 57
+    '}'     décalage et aller à l'état 107
+    ';'     décalage et aller à l'état 59
+
+    Instr   aller à l'état 60
+    LValue  aller à l'état 61
+
+
+État 86
+
+   29 Instr: LValue '=' . Exp ';'
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    Exp     aller à l'état 108
+    TB      aller à l'état 78
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 87
+
+   23 ListTypVar: ListTypVar ',' TYPE IDENT .
+
+    $défaut  réduction par utilisation de la règle 23 (ListTypVar)
+
+
+État 88
+
+   42 Exp: Exp . OR TB
+   66 ListExp: Exp .
+
+    OR  décalage et aller à l'état 100
+
+    $défaut  réduction par utilisation de la règle 66 (ListExp)
+
+
+État 89
+
+   36 Instr: IDENT '(' Arguments . ')' ';'
+
+    ')'  décalage et aller à l'état 109
+
+
+État 90
+
+   63 Arguments: ListExp .
+   65 ListExp: ListExp . ',' Exp
+
+    ','  décalage et aller à l'état 110
+
+    $défaut  réduction par utilisation de la règle 63 (Arguments)
+
+
+État 91
+
+   31 Instr: READC '(' IDENT . ')' ';'
+
+    ')'  décalage et aller à l'état 111
+
+
+État 92
+
+   30 Instr: READE '(' IDENT . ')' ';'
+
+    ')'  décalage et aller à l'état 112
+
+
+État 93
+
+   32 Instr: PRINT '(' Exp . ')' ';'
+   42 Exp: Exp . OR TB
+
+    OR   décalage et aller à l'état 100
+    ')'  décalage et aller à l'état 113
+
+
+État 94
+
+   35 Instr: WHILE '(' Exp . ')' Instr
+   42 Exp: Exp . OR TB
+
+    OR   décalage et aller à l'état 100
+    ')'  décalage et aller à l'état 114
+
+
+État 95
+
+   33 Instr: IF '(' Exp . ')' Instr
+   34      | IF '(' Exp . ')' Instr ELSE Instr
+   42 Exp: Exp . OR TB
+
+    OR   décalage et aller à l'état 100
+    ')'  décalage et aller à l'état 115
+
+
+État 96
+
+   61 F: IDENT '(' . Arguments ')'
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    ')'  réduction par utilisation de la règle 64 (Arguments)
+
+    Exp        aller à l'état 88
+    TB         aller à l'état 78
+    FB         aller à l'état 79
+    M          aller à l'état 80
+    E          aller à l'état 81
+    T          aller à l'état 82
+    F          aller à l'état 83
+    LValue     aller à l'état 84
+    Arguments  aller à l'état 116
+    ListExp    aller à l'état 90
+
+
+État 97
+
+   55 F: ADDSUB F .
+
+    $défaut  réduction par utilisation de la règle 55 (F)
+
+
+État 98
+
+   42 Exp: Exp . OR TB
+   57 F: '(' Exp . ')'
+
+    OR   décalage et aller à l'état 100
+    ')'  décalage et aller à l'état 117
+
+
+État 99
+
+   56 F: '!' F .
+
+    $défaut  réduction par utilisation de la règle 56 (F)
+
+
+État 100
+
+   42 Exp: Exp OR . TB
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    TB      aller à l'état 118
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 101
+
+   37 Instr: RETURN Exp ';' .
+
+    $défaut  réduction par utilisation de la règle 37 (Instr)
+
+
+État 102
+
+   45 TB: TB AND . FB
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    FB      aller à l'état 119
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 103
+
+   47 FB: FB EQ . M
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    M       aller à l'état 120
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 104
+
+   49 M: M ORDER . E
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    E       aller à l'état 121
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 105
+
+   51 E: E ADDSUB . T
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    T       aller à l'état 122
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 106
+
+   53 T: T DIVSTAR . F
+
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    F       aller à l'état 123
+    LValue  aller à l'état 84
+
+
+État 107
+
+   39 Instr: '{' SuiteInstr '}' .
+
+    $défaut  réduction par utilisation de la règle 39 (Instr)
+
+
+État 108
+
+   29 Instr: LValue '=' Exp . ';'
+   42 Exp: Exp . OR TB
+
+    OR   décalage et aller à l'état 100
+    ';'  décalage et aller à l'état 124
+
+
+État 109
+
+   36 Instr: IDENT '(' Arguments ')' . ';'
+
+    ';'  décalage et aller à l'état 125
+
+
+État 110
+
+   65 ListExp: ListExp ',' . Exp
+
+    error      décalage et aller à l'état 69
+    CHARACTER  décalage et aller à l'état 70
+    NUM        décalage et aller à l'état 71
+    IDENT      décalage et aller à l'état 72
+    ADDSUB     décalage et aller à l'état 73
+    '('        décalage et aller à l'état 75
+    '!'        décalage et aller à l'état 76
+
+    Exp     aller à l'état 126
+    TB      aller à l'état 78
+    FB      aller à l'état 79
+    M       aller à l'état 80
+    E       aller à l'état 81
+    T       aller à l'état 82
+    F       aller à l'état 83
+    LValue  aller à l'état 84
+
+
+État 111
+
+   31 Instr: READC '(' IDENT ')' . ';'
+
+    ';'  décalage et aller à l'état 127
+
+
+État 112
+
+   30 Instr: READE '(' IDENT ')' . ';'
+
+    ';'  décalage et aller à l'état 128
+
+
+État 113
+
+   32 Instr: PRINT '(' Exp ')' . ';'
+
+    ';'  décalage et aller à l'état 129
+
+
+État 114
+
+   35 Instr: WHILE '(' Exp ')' . Instr
+
+    error   décalage et aller à l'état 49
+    IDENT   décalage et aller à l'état 50
+    READC   décalage et aller à l'état 51
+    READE   décalage et aller à l'état 52
+    PRINT   décalage et aller à l'état 53
+    WHILE   décalage et aller à l'état 54
+    IF      décalage et aller à l'état 55
+    RETURN  décalage et aller à l'état 56
+    '{'     décalage et aller à l'état 57
+    ';'     décalage et aller à l'état 59
+
+    Instr   aller à l'état 130
+    LValue  aller à l'état 61
+
+
+État 115
+
+   33 Instr: IF '(' Exp ')' . Instr
+   34      | IF '(' Exp ')' . Instr ELSE Instr
+
+    error   décalage et aller à l'état 49
+    IDENT   décalage et aller à l'état 50
+    READC   décalage et aller à l'état 51
+    READE   décalage et aller à l'état 52
+    PRINT   décalage et aller à l'état 53
+    WHILE   décalage et aller à l'état 54
+    IF      décalage et aller à l'état 55
+    RETURN  décalage et aller à l'état 56
+    '{'     décalage et aller à l'état 57
+    ';'     décalage et aller à l'état 59
+
+    Instr   aller à l'état 131
+    LValue  aller à l'état 61
+
+
+État 116
+
+   61 F: IDENT '(' Arguments . ')'
+
+    ')'  décalage et aller à l'état 132
+
+
+État 117
+
+   57 F: '(' Exp ')' .
+
+    $défaut  réduction par utilisation de la règle 57 (F)
+
+
+État 118
+
+   42 Exp: Exp OR TB .
+   45 TB: TB . AND FB
+
+    AND  décalage et aller à l'état 102
+
+    $défaut  réduction par utilisation de la règle 42 (Exp)
+
+
+État 119
+
+   45 TB: TB AND FB .
+   47 FB: FB . EQ M
+
+    EQ  décalage et aller à l'état 103
+
+    $défaut  réduction par utilisation de la règle 45 (TB)
+
+
+État 120
+
+   47 FB: FB EQ M .
+   49 M: M . ORDER E
+
+    ORDER  décalage et aller à l'état 104
+
+    $défaut  réduction par utilisation de la règle 47 (FB)
+
+
+État 121
+
+   49 M: M ORDER E .
+   51 E: E . ADDSUB T
+
+    ADDSUB  décalage et aller à l'état 105
+
+    $défaut  réduction par utilisation de la règle 49 (M)
+
+
+État 122
+
+   51 E: E ADDSUB T .
+   53 T: T . DIVSTAR F
+
+    DIVSTAR  décalage et aller à l'état 106
+
+    $défaut  réduction par utilisation de la règle 51 (E)
+
+
+État 123
+
+   53 T: T DIVSTAR F .
+
+    $défaut  réduction par utilisation de la règle 53 (T)
+
+
+État 124
+
+   29 Instr: LValue '=' Exp ';' .
+
+    $défaut  réduction par utilisation de la règle 29 (Instr)
+
+
+État 125
+
+   36 Instr: IDENT '(' Arguments ')' ';' .
+
+    $défaut  réduction par utilisation de la règle 36 (Instr)
+
+
+État 126
+
+   42 Exp: Exp . OR TB
+   65 ListExp: ListExp ',' Exp .
+
+    OR  décalage et aller à l'état 100
+
+    $défaut  réduction par utilisation de la règle 65 (ListExp)
+
+
+État 127
+
+   31 Instr: READC '(' IDENT ')' ';' .
+
+    $défaut  réduction par utilisation de la règle 31 (Instr)
+
+
+État 128
+
+   30 Instr: READE '(' IDENT ')' ';' .
+
+    $défaut  réduction par utilisation de la règle 30 (Instr)
+
+
+État 129
+
+   32 Instr: PRINT '(' Exp ')' ';' .
+
+    $défaut  réduction par utilisation de la règle 32 (Instr)
+
+
+État 130
+
+   35 Instr: WHILE '(' Exp ')' Instr .
+
+    $défaut  réduction par utilisation de la règle 35 (Instr)
+
+
+État 131
+
+   33 Instr: IF '(' Exp ')' Instr .
+   34      | IF '(' Exp ')' Instr . ELSE Instr
+
+    ELSE  décalage et aller à l'état 133
+
+    $défaut  réduction par utilisation de la règle 33 (Instr)
+
+
+État 132
+
+   61 F: IDENT '(' Arguments ')' .
+
+    $défaut  réduction par utilisation de la règle 61 (F)
+
+
+État 133
+
+   34 Instr: IF '(' Exp ')' Instr ELSE . Instr
+
+    error   décalage et aller à l'état 49
+    IDENT   décalage et aller à l'état 50
+    READC   décalage et aller à l'état 51
+    READE   décalage et aller à l'état 52
+    PRINT   décalage et aller à l'état 53
+    WHILE   décalage et aller à l'état 54
+    IF      décalage et aller à l'état 55
+    RETURN  décalage et aller à l'état 56
+    '{'     décalage et aller à l'état 57
+    ';'     décalage et aller à l'état 59
+
+    Instr   aller à l'état 134
+    LValue  aller à l'état 61
+
+
+État 134
+
+   34 Instr: IF '(' Exp ')' Instr ELSE Instr .
+
+    $défaut  réduction par utilisation de la règle 34 (Instr)

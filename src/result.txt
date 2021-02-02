@@ -1,0 +1,7 @@
+../tests/correct/test_correct1.tpc: failed
+../tests/correct/test_correct2.tpc: correct
+../tests/correct/trinome.tpc: failed
+../tests/invalid/test_invalide1.tpc: failed
+../tests/invalid/test_invalide2.tpc: failed
+TESTS CORRECT : 1
+TESTS INVALID : 4
